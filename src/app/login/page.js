@@ -37,7 +37,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-bg px-6">
       <div className="w-full max-w-sm">
         <Link href="/" className="mb-8 block text-center font-display text-2xl font-extrabold text-ink">
-          Vandal
+          Voltage
         </Link>
 
         <div className="rounded-xl border border-border bg-surface p-8">

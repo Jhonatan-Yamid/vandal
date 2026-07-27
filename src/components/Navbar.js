@@ -6,7 +6,7 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-1.5">
           <span className="font-display text-xl font-extrabold tracking-tight text-ink">
-            Vandal
+            Voltage
           </span>
         </Link>
         <nav className="flex items-center gap-6">

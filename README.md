@@ -1,4 +1,4 @@
-# VANDAL — Tienda de Tenis
+# VOLTAGE — Tienda de Tenis
 
 Tienda virtual de tenis construida con **Next.js 14 (App Router) + Tailwind CSS + Prisma (MySQL)**.
 El backend vive en el propio API de Next.js (`src/app/api/**`), sin servidor externo.

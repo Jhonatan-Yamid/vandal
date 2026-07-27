@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/Navbar";
 import SizeRun from "@/components/SizeRun";
+import WhatsAppOrder from "@/components/WhatsAppOrder";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,14 @@ export default async function DetalleProducto({ params }) {
                 ? `${producto.stock} pares disponibles`
                 : "Sin existencias por ahora"}
             </p>
+
+            <WhatsAppOrder
+              producto={{
+                id: producto.id,
+                name: producto.name,
+                sizes: producto.sizes,
+              }}
+            />
           </div>
         </div>
       </main>
