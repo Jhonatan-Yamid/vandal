@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }) {
       <header className="sticky top-0 z-40 border-b border-border bg-bg/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/admin" className="font-display text-lg font-bold text-ink">
-            Voltage <span className="font-normal text-muted">/ admin</span>
+            VANDAL <span className="font-normal text-muted">/ admin</span>
           </Link>
           <nav className="flex items-center gap-2">
             <Link

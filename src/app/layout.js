@@ -13,7 +13,7 @@ const body = Inter({
 });
 
 export const metadata = {
-  title: "VOLTAGE — Tienda de Tenis",
+  title: "VANDAL — Tienda de Tenis",
   description: "Catálogo de tenis: running, basketball, casual, skate y training.",
 };
 

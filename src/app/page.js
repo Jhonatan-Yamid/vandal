@@ -74,7 +74,7 @@ export default async function Home({ searchParams }) {
       </section>
 
       <footer className="border-t border-border px-6 py-10 text-center text-sm text-muted">
-        © {new Date().getFullYear()} Voltage — Tienda de tenis
+        © {new Date().getFullYear()} VANDAL — Tienda de tenis
       </footer>
     </div>
   );

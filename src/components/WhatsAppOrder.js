@@ -27,7 +27,7 @@ export default function WhatsAppOrder({ producto }) {
     const enlace =
       typeof window !== "undefined" ? window.location.href : "";
 
-    const mensaje = `¡Hola! 👋 Me enamoré de este par en *Voltage* y ya sé cuál quiero:\n\n👟 *${producto.name}*\n📏 Talla: *${tallaSeleccionada}*\n🔗 ${enlace}\n\n¿Me confirmas disponibilidad y cómo continúo con la compra?`;
+    const mensaje = `¡Hola! 👋 Me enamoré de este par en *VANDAL* y ya sé cuál quiero:\n\n👟 *${producto.name}*\n📏 Talla: *${tallaSeleccionada}*\n🔗 ${enlace}\n\n¿Me confirmas disponibilidad y cómo continúo con la compra?`;
 
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
       mensaje
