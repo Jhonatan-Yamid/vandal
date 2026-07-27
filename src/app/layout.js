@@ -13,8 +13,15 @@ const body = Inter({
 });
 
 export const metadata = {
-  title: "VANDAL — Tienda de Tenis",
+  title: "Vandal — Tienda de Tenis",
   description: "Catálogo de tenis: running, basketball, casual, skate y training.",
+  manifest: "/manifest.json",
+  themeColor: "#00A3BF",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Vandal",
+  },
 };
 
 export default function RootLayout({ children }) {
