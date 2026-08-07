@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { tituloCapitalizado } from "@/lib/format";
 
 function formatoPrecio(valor) {
   return new Intl.NumberFormat("es-CO", {
@@ -42,7 +43,6 @@ export default function ProductTable({ productos }) {
         <thead>
           <tr className="border-b border-border bg-surface text-[13px] font-semibold text-muted">
             <th className="px-4 py-3">Producto</th>
-            <th className="px-4 py-3">Categoría</th>
             <th className="px-4 py-3">Precio</th>
             <th className="px-4 py-3">Stock</th>
             <th className="px-4 py-3 text-right">Acciones</th>
@@ -52,10 +52,9 @@ export default function ProductTable({ productos }) {
           {productos.map((p) => (
             <tr key={p.id} className="border-b border-border last:border-none">
               <td className="px-4 py-3">
-                <p className="font-medium text-ink">{p.name}</p>
+                <p className="font-medium text-ink">{tituloCapitalizado(p.name)}</p>
                 {p.brand && <p className="text-xs text-muted">{p.brand}</p>}
               </td>
-              <td className="px-4 py-3 text-muted">{p.category?.name}</td>
               <td className="px-4 py-3 text-ink">{formatoPrecio(p.price)}</td>
               <td className="px-4 py-3">
                 <span

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { obtenerCategoriaPorDefectoId } from "@/lib/config";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -25,23 +26,27 @@ export async function POST(request) {
   const body = await request.json();
   const { name, brand, description, price, imageUrl, stock, sizes, categoryId } = body;
 
-  if (!name || !description || !price || !imageUrl || !sizes || !categoryId) {
+  if (!name || !description || !price || !imageUrl || !sizes) {
     return NextResponse.json(
       { error: "Faltan campos obligatorios" },
       { status: 400 }
     );
   }
 
+  const categoriaFinalId = categoryId
+    ? Number(categoryId)
+    : await obtenerCategoriaPorDefectoId();
+
   const producto = await prisma.product.create({
     data: {
-      name,
+      name: name.toUpperCase(),
       brand: brand || null,
       description,
       price,
       imageUrl,
       stock: Number(stock) || 0,
       sizes,
-      categoryId: Number(categoryId),
+      categoryId: categoriaFinalId,
     },
   });
 

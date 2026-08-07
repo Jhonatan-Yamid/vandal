@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { prisma } from "@/lib/prisma";
 import { enviarMensajeWhatsApp, descargarMediaWhatsApp } from "@/lib/whatsapp";
+import { obtenerCategoriaPorDefectoId } from "@/lib/config";
+import { tituloCapitalizado } from "@/lib/format";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -14,7 +16,6 @@ const NUMEROS_PERMITIDOS = (process.env.WHATSAPP_ALLOWED_NUMBERS || "")
   .map((n) => n.trim())
   .filter(Boolean);
 
-const CATEGORIA_SLUG_DEFECTO = process.env.CATEGORIA_SLUG_DEFECTO || "sin-categoria";
 const TALLAS_DEFECTO = process.env.TALLAS_DEFECTO || "36,37,38,39,40,41";
 const STOCK_DEFECTO = Number(process.env.STOCK_DEFECTO || 5);
 
@@ -31,9 +32,10 @@ export async function GET(request) {
   return NextResponse.json({ error: "Token inválido" }, { status: 403 });
 }
 
-function limpiarEmojis(texto) {
+function limpiarTexto(texto) {
   return texto
     .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2190}-\u{21FF}\u{2B00}-\u{2BFF}]/gu, "")
+    .replace(/[*_~`]/g, "") // quita símbolos de formato de WhatsApp (negrita/cursiva/tachado)
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -48,7 +50,7 @@ function parsearMensaje(caption) {
   if (!precio) return null;
 
   const lineas = caption.split("\n").map((l) => l.trim()).filter(Boolean);
-  const nombre = limpiarEmojis(lineas[0] || "Producto sin nombre");
+  const nombre = limpiarTexto(lineas[0] || "Producto sin nombre");
 
   const docenasMatch = caption.match(/curvas\s*&?\s*docenas[^\d]{0,15}([\d.,]+)/i);
   const precioDocena = docenasMatch
@@ -78,17 +80,7 @@ export async function POST(request) {
     const datos = parsearMensaje(mensaje.image.caption || "");
     if (!datos) return NextResponse.json({ ok: true }); // no coincide el formato, ignora
 
-    const categoria = await prisma.category.findUnique({
-      where: { slug: CATEGORIA_SLUG_DEFECTO },
-    });
-
-    if (!categoria) {
-      await enviarMensajeWhatsApp(
-        numeroRemitente,
-        `⚠️ No encontré la categoría "${CATEGORIA_SLUG_DEFECTO}". Créala una vez desde el panel admin.`
-      );
-      return NextResponse.json({ ok: true });
-    }
+    const categoriaId = await obtenerCategoriaPorDefectoId();
 
     const { buffer } = await descargarMediaWhatsApp(mensaje.image.id);
 
@@ -110,19 +102,19 @@ export async function POST(request) {
 
     const producto = await prisma.product.create({
       data: {
-        name: datos.nombre,
+        name: datos.nombre.toUpperCase(), // se guarda en MAYÚSCULAS, el front lo muestra en Capital Case
         description: descripcion,
         price: datos.precio,
         imageUrl: subida.secure_url,
         stock: STOCK_DEFECTO,
         sizes: TALLAS_DEFECTO,
-        categoryId: categoria.id,
+        categoryId: categoriaId,
       },
     });
 
     await enviarMensajeWhatsApp(
       numeroRemitente,
-      `✅ *${producto.name}* creado en la tienda por $${Number(
+      `✅ ${tituloCapitalizado(producto.name)} creado en la tienda por $${Number(
         producto.price
       ).toLocaleString("es-CO")}.\n🔗 ${process.env.APP_URL}/producto/${producto.id}`
     );

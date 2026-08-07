@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import SizeRun from "./SizeRun";
+import { aplicarMarkup, tituloCapitalizado } from "@/lib/format";
 
 function formatoPrecio(valor) {
   return new Intl.NumberFormat("es-CO", {
@@ -10,7 +11,10 @@ function formatoPrecio(valor) {
   }).format(Number(valor));
 }
 
-export default function ProductCard({ producto }) {
+export default function ProductCard({ producto, markup = 0 }) {
+  const nombre = tituloCapitalizado(producto.name);
+  const precioFinal = aplicarMarkup(producto.price, markup);
+
   return (
     <Link
       href={`/producto/${producto.id}`}
@@ -19,14 +23,11 @@ export default function ProductCard({ producto }) {
       <div className="relative aspect-square w-full overflow-hidden bg-surface2">
         <Image
           src={producto.imageUrl}
-          alt={producto.name}
+          alt={nombre}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
-        <span className="absolute left-3 top-3 rounded-full bg-bg/80 px-3 py-1 text-[11px] font-semibold text-accent">
-          {producto.category?.name}
-        </span>
         {producto.stock === 0 && (
           <span className="absolute right-3 top-3 rounded-full bg-accent2 px-3 py-1 text-[11px] font-semibold text-bg">
             Agotado
@@ -41,12 +42,12 @@ export default function ProductCard({ producto }) {
             </p>
           )}
           <h3 className="font-display text-lg font-bold leading-snug text-ink">
-            {producto.name}
+            {nombre}
           </h3>
         </div>
         <SizeRun sizes={producto.sizes} compact />
         <p className="mt-auto font-display text-lg font-extrabold text-accent">
-          {formatoPrecio(producto.price)}
+          {formatoPrecio(precioFinal)}
         </p>
       </div>
     </Link>

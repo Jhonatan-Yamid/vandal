@@ -21,10 +21,10 @@ export default async function AdminLayout({ children }) {
               Productos
             </Link>
             <Link
-              href="/admin/categorias"
+              href="/admin/configuracion"
               className="rounded-full px-4 py-2 text-[14px] font-medium text-muted transition hover:text-accent"
             >
-              Categorías
+              Configuración
             </Link>
             <span className="mx-2 hidden text-sm text-muted sm:block">
               {session?.user?.name}

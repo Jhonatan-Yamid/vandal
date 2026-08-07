@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const TALLAS_DISPONIBLES = [35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46];
 
-export default function ProductForm({ categorias, producto }) {
+export default function ProductForm({ producto }) {
   const router = useRouter();
   const esEdicion = Boolean(producto);
 
@@ -16,7 +16,6 @@ export default function ProductForm({ categorias, producto }) {
     price: producto?.price || "",
     imageUrl: producto?.imageUrl || "",
     stock: producto?.stock ?? 0,
-    categoryId: producto?.categoryId || categorias[0]?.id || "",
   });
   const [tallasElegidas, setTallasElegidas] = useState(
     new Set(
@@ -98,9 +97,9 @@ export default function ProductForm({ categorias, producto }) {
     setCargando(true);
     const payload = {
       ...form,
+      name: form.name.toUpperCase(),
       price: Number(form.price),
       stock: Number(form.stock),
-      categoryId: Number(form.categoryId),
       sizes: Array.from(tallasElegidas).sort((a, b) => a - b).join(","),
     };
 
@@ -167,7 +166,7 @@ export default function ProductForm({ categorias, producto }) {
         />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-3">
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm font-medium text-muted">
             Precio (COP) *
@@ -196,24 +195,6 @@ export default function ProductForm({ categorias, producto }) {
             onChange={handleChange}
             className="w-full rounded-md border border-border bg-surface2 px-3 py-2 text-ink outline-none focus:border-accent"
           />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-muted">
-            Categoría *
-          </label>
-          <select
-            name="categoryId"
-            required
-            value={form.categoryId}
-            onChange={handleChange}
-            className="w-full rounded-md border border-border bg-surface2 px-3 py-2 text-ink outline-none focus:border-accent"
-          >
-            {categorias.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
         </div>
       </div>
 

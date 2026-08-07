@@ -2,8 +2,26 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+const TREINTA_DIAS = 60 * 60 * 24 * 30;
+
 export const authOptions = {
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: TREINTA_DIAS },
+  jwt: { maxAge: TREINTA_DIAS },
+  cookies: {
+    sessionToken: {
+      name:
+        process.env.NODE_ENV === "production"
+          ? "__Secure-next-auth.session-token"
+          : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        maxAge: TREINTA_DIAS,
+      },
+    },
+  },
   pages: {
     signIn: "/login",
   },

@@ -37,3 +37,10 @@ model Admin {
   name      String   @db.VarChar(120)
   createdAt DateTime @default(now())
 }
+
+model SiteConfig {
+  id                 Int      @id @default(1)
+  priceMarkupPercent Int      @default(0) // % que se suma al precio SOLO en el front, no altera product.price
+  productMaxAgeDays  Int?     // días tras los cuales un producto se borra automáticamente; null = desactivado
+  updatedAt          DateTime @updatedAt
+}

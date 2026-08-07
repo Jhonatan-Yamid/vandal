@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { getConfiguracion } from "@/lib/config";
+import { aplicarMarkup, tituloCapitalizado } from "@/lib/format";
 import Navbar from "@/components/Navbar";
 import SizeRun from "@/components/SizeRun";
 import WhatsAppOrder from "@/components/WhatsAppOrder";
@@ -20,12 +22,15 @@ export default async function DetalleProducto({ params }) {
   const id = Number(params.id);
   if (Number.isNaN(id)) notFound();
 
-  const producto = await prisma.product.findUnique({
-    where: { id },
-    include: { category: true },
-  });
+  const [producto, config] = await Promise.all([
+    prisma.product.findUnique({ where: { id } }),
+    getConfiguracion(),
+  ]);
 
   if (!producto) notFound();
+
+  const nombre = tituloCapitalizado(producto.name);
+  const precioFinal = aplicarMarkup(producto.price, config.priceMarkupPercent);
 
   return (
     <div className="min-h-screen">
@@ -39,7 +44,7 @@ export default async function DetalleProducto({ params }) {
           <div className="relative aspect-square overflow-hidden rounded-xl border border-border bg-surface2">
             <Image
               src={producto.imageUrl}
-              alt={producto.name}
+              alt={nombre}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
@@ -49,24 +54,18 @@ export default async function DetalleProducto({ params }) {
 
           <div className="flex flex-col gap-6">
             <div>
-              <Link
-                href={`/?categoria=${producto.category.slug}#catalogo`}
-                className="text-[13px] font-semibold text-accent"
-              >
-                {producto.category.name}
-              </Link>
               {producto.brand && (
-                <p className="mt-1 text-sm font-medium text-muted">
+                <p className="text-sm font-medium text-muted">
                   {producto.brand}
                 </p>
               )}
               <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
-                {producto.name}
+                {nombre}
               </h1>
             </div>
 
             <p className="font-display text-3xl font-extrabold text-accent">
-              {formatoPrecio(producto.price)}
+              {formatoPrecio(precioFinal)}
             </p>
 
             <p className="max-w-xl leading-relaxed text-muted">
@@ -89,7 +88,7 @@ export default async function DetalleProducto({ params }) {
             <WhatsAppOrder
               producto={{
                 id: producto.id,
-                name: producto.name,
+                name: nombre,
                 sizes: producto.sizes,
               }}
             />

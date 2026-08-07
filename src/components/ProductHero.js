@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { aplicarMarkup, tituloCapitalizado } from "@/lib/format";
 
 function formatoPrecio(valor) {
   return new Intl.NumberFormat("es-CO", {
@@ -9,34 +10,39 @@ function formatoPrecio(valor) {
   }).format(Number(valor));
 }
 
-export default function ProductHero({ producto, sugeridos }) {
+export default function ProductHero({ producto, sugeridos, markup = 0 }) {
   if (!producto) return null;
+
+  const nombre = tituloCapitalizado(producto.name);
+  const precioFinal = aplicarMarkup(producto.price, markup);
+  const textoFondo = producto.brand || "NUEVO";
 
   return (
     <section className="relative overflow-hidden border-b border-border bg-white">
-      {/* Texto gigante decorativo de fondo: nombre de la categoría */}
+      {/* Texto gigante decorativo de fondo */}
       <span
         aria-hidden
         className="pointer-events-none absolute -top-6 left-1/2 hidden -translate-x-1/2 select-none font-display text-[13rem] font-extrabold uppercase leading-none text-accent/[0.06] lg:block"
       >
-        {producto.category?.name}
+        {textoFondo}
       </span>
 
       <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-14 sm:py-20 lg:grid-cols-2 lg:items-center lg:gap-6">
         {/* Columna de texto */}
         <div className="relative z-10 flex flex-col gap-5">
-          <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-            {producto.brand ? `${producto.brand} · ` : ""}
-            {producto.category?.name}
-          </p>
+          {producto.brand && (
+            <p className="text-sm font-semibold uppercase tracking-wide text-accent">
+              {producto.brand}
+            </p>
+          )}
           <h1 className="max-w-lg font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-            {producto.name}
+            {nombre}
           </h1>
           <p className="max-w-md text-base leading-relaxed text-muted">
             {producto.description}
           </p>
           <p className="font-display text-3xl font-extrabold text-accent">
-            {formatoPrecio(producto.price)}
+            {formatoPrecio(precioFinal)}
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <Link
@@ -60,7 +66,7 @@ export default function ProductHero({ producto, sugeridos }) {
           <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-3xl border border-border bg-surface2 shadow-xl shadow-accent/10 sm:rotate-3 sm:transition sm:duration-500 sm:hover:rotate-0">
             <Image
               src={producto.imageUrl}
-              alt={producto.name}
+              alt={nombre}
               fill
               sizes="(max-width: 1024px) 90vw, 480px"
               className="object-cover"
@@ -86,11 +92,11 @@ export default function ProductHero({ producto, sugeridos }) {
                     ? "border-accent ring-2 ring-accent/40"
                     : "border-border hover:border-accent"
                 }`}
-                title={s.name}
+                title={tituloCapitalizado(s.name)}
               >
                 <Image
                   src={s.imageUrl}
-                  alt={s.name}
+                  alt={tituloCapitalizado(s.name)}
                   fill
                   sizes="56px"
                   className="object-cover"

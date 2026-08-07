@@ -25,18 +25,22 @@ export async function PUT(request, { params }) {
   const { name, brand, description, price, imageUrl, stock, sizes, categoryId } = body;
 
   try {
+    const data = {
+      name: name.toUpperCase(),
+      brand: brand || null,
+      description,
+      price,
+      imageUrl,
+      stock: Number(stock) || 0,
+      sizes,
+    };
+    // Solo se cambia la categoría si el formulario la envía explícitamente
+    // (el formulario actual no la envía, para no alterar la categoría existente)
+    if (categoryId) data.categoryId = Number(categoryId);
+
     const producto = await prisma.product.update({
       where: { id: Number(params.id) },
-      data: {
-        name,
-        brand: brand || null,
-        description,
-        price,
-        imageUrl,
-        stock: Number(stock) || 0,
-        sizes,
-        categoryId: Number(categoryId),
-      },
+      data,
     });
     return NextResponse.json(producto);
   } catch (err) {
