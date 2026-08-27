@@ -45,7 +45,7 @@ export default function ProductCard({ producto, markup = 0 }) {
             {nombre}
           </h3>
         </div>
-        <SizeRun sizes={producto.sizes} compact />
+        {/* <SizeRun sizes={producto.sizes} compact /> */}
         <p className="mt-auto font-display text-lg font-extrabold text-accent">
           {formatoPrecio(precioFinal)}
         </p>
