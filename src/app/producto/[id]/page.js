@@ -68,9 +68,9 @@ export default async function DetalleProducto({ params }) {
               {formatoPrecio(precioFinal)}
             </p>
 
-            <p className="max-w-xl leading-relaxed text-muted">
+            {/* <p className="max-w-xl leading-relaxed text-muted">
               {producto.description}
-            </p>
+            </p> */}
 
             <div>
               <p className="mb-2 text-sm font-semibold text-muted">

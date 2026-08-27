@@ -38,9 +38,9 @@ export default function ProductHero({ producto, sugeridos, markup = 0 }) {
           <h1 className="max-w-lg font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-6xl">
             {nombre}
           </h1>
-          <p className="max-w-md text-base leading-relaxed text-muted">
+          {/* <p className="max-w-md text-base leading-relaxed text-muted">
             {producto.description}
-          </p>
+          </p> */}
           <p className="font-display text-3xl font-extrabold text-accent">
             {formatoPrecio(precioFinal)}
           </p>
