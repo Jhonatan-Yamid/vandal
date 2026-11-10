@@ -69,7 +69,6 @@ export async function POST(request) {
     if (!mensaje) return NextResponse.json({ ok: true }); // otros eventos (ej. "leído"), ignorar
 
     const numeroRemitente = mensaje.from; // ej: "573192934969"
-    return NextResponse.json({ ok: true });
 
     if (mensaje.type !== "image" || !mensaje.image) {
       return NextResponse.json({ ok: true }); // no es una imagen, ignora
